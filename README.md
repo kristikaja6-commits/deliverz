@@ -1,61 +1,61 @@
-generator client {
-  provider = "prisma-client-js"
-}
+```markdown
+# Post‑Ticket — country-to-country delivery booking (starter)
 
-datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
-}
+A starter full‑stack web app that lets delivery companies register routes (which cities they cover and which days per week) and lets customers search and "book" delivery services in the same UX pattern as buying a plane ticket.
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  password  String
-  company   Company?
-  bookings  Booking[] // optional: bookings made by user
-  createdAt DateTime @default(now())
-}
+Tech stack
+- Next.js (TypeScript) for frontend + serverless API routes
+- Tailwind CSS for quick UI styled like a flight-booking form
+- Prisma + SQLite for simple local data store (easy to replace with Postgres)
+- Simple booking flow stub (no payment)
 
-model Company {
-  id          Int       @id @default(autoincrement())
-  name        String
-  email       String
-  description String?
-  coverages   Coverage[]
-  owner       User?     @relation(fields: [ownerId], references: [id])
-  ownerId     Int?      @unique
-  bookings    Booking[] // bookings for this company
-  createdAt   DateTime  @default(now())
-}
+What this repo contains
+- Public pages:
+  - / (search page: "From → To" route search)
+  - /register (company registration page to declare coverages)
+- API:
+  - GET /api/companies?from=City&to=City — search companies covering that route
+  - POST /api/companies — register company + coverages
 
-model Coverage {
-  id         Int       @id @default(autoincrement())
-  company    Company   @relation(fields: [companyId], references: [id])
-  companyId  Int
-  fromCity   String
-  toCity     String
-  // store weekdays as JSON array (0-6 => Sunday-Saturday)
-  days       Json
-  bookings   Booking[]
-  createdAt  DateTime  @default(now())
-}
+Get started (local)
+1. Install
+   - Node.js 18+
+   - npm / pnpm / yarn
 
-model Booking {
-  id               Int      @id @default(autoincrement())
-  coverage         Coverage @relation(fields: [coverageId], references: [id])
-  coverageId       Int
-  company          Company  @relation(fields: [companyId], references: [id])
-  companyId        Int
-  user             User?    @relation(fields: [userId], references: [id])
-  userId           Int?
-  senderName       String
-  senderEmail      String
-  recipientName    String
-  recipientAddress String
-  weightKg         Float?
-  pickupDate       DateTime?
-  notes            String?
-  status           String   @default("pending") // pending, confirmed, completed, canceled
-  createdAt        DateTime @default(now())
-}
+2. Clone and install dependencies
+   - npm install
+
+3. Setup Prisma and DB
+   - npx prisma migrate dev --name init
+   - npm run prisma:seed
+
+4. Run dev server
+   - npm run dev
+   - Open http://localhost:3000
+
+How the data model works (Prisma)
+- Company: name, contact email, description
+- Coverage: fromCity, toCity, days JSON (array of 0–6 representing weekdays, 0=Sunday)
+
+API examples
+- Register:
+  POST /api/companies
+  {
+    "name":"QuickShip Ltd",
+    "email":"ops@quickship.com",
+    "description":"Fast weekly routes",
+    "coverages":[
+      {"fromCity":"London","toCity":"Tirana","days":[1,3,5]},
+      {"fromCity":"London","toCity":"Pristina","days":[2,4]}
+    ]
+  }
+
+- Search:
+  GET /api/companies?from=London&to=Tirana
+
+Notes & next steps
+- Add authentication (e.g., NextAuth) for company accounts and bookings.
+- Add bookings table and booking flow (with confirmation emails / payments).
+- Add city/country validation or integrate an autocomplete (IATA-like) for better UX.
+- Replace SQLite with Postgres for production and add migrations/seeding strategy.
+```
