@@ -1,0 +1,30 @@
+{
+  "name": "deliverz",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "ts-node --transpile-only prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.0.0",
+    "axios": "^1.5.0",
+    "next": "14.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "next-auth": "^4.24.0",
+    "bcryptjs": "^2.4.3",
+    "nodemailer": "^6.9.5"
+  },
+  "devDependencies": {
+    "prisma": "^5.0.0",
+    "tailwindcss": "^4.0.0",
+    "autoprefixer": "10.4.0",
+    "postcss": "8.4.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.1"
+  }
+}
